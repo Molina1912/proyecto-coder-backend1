@@ -1,0 +1,11 @@
+{
+  "name": "entregabackendcoder",
+  "type": "module",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.x.x",
+    "express-handlebars": "^8.0.3",
+    "mongoose": "^8.x.x",
+    "mongoose-paginate-v2": "^1.9.1"
+  }
+}
