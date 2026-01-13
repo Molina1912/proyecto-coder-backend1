@@ -1,0 +1,24 @@
+# Dependencias
+node_modules/
+
+# Archivos de entorno (si usas variables de entorno en el futuro)
+.env
+.env.local
+
+# Logs y debugging
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDEs y editores de código
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Otros archivos temporales o innecesarios
+.DS_Store
