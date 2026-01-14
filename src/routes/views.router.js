@@ -1,13 +1,12 @@
-// src/routes/views.router.js
 import { Router } from 'express';
 import { ProductModel } from '../models/product.model.js';
-// ✅ CORRECTO
+
 import { CartModel } from '../models/cart.model.js';
 
 const router = Router();
 
 
-// Ruta: /products → lista con paginación
+
 router.get('/products', async (req, res) => {
   try {
     const { limit = 10, page = 1, sort, query } = req.query;
@@ -28,7 +27,7 @@ router.get('/products', async (req, res) => {
       lean: true
     });
 
-    // Construir URL base
+ 
     const buildUrl = (p) => {
       const url = new URL('http://localhost:8080/products');
       url.searchParams.set('limit', limit);
@@ -58,7 +57,7 @@ router.get('/products', async (req, res) => {
   }
 });
 
-// Ruta: /products/:pid → detalle
+
 router.get('/products/:pid', async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.pid).lean();
@@ -69,7 +68,7 @@ router.get('/products/:pid', async (req, res) => {
   }
 });
 
-// Ruta: /carts/:cid → carrito con populate
+
 router.get('/carts/:cid', async (req, res) => {
   try {
     const cart = await CartModel.findById(req.params.cid).populate('products.product').lean();

@@ -1,9 +1,9 @@
-// src/config/database.js
+
 import mongoose from 'mongoose';
 
 export const connectDB = async () => {
   try {
-    // 👇 URL de MongoDB Atlas + nombre de la base de datos
+
     await mongoose.connect('mongodb+srv://krlossmolina85_db_user:X7hkUcIQdG1XzWPD@cluster0.hwrhryr.mongodb.net/ecommerce');
     console.log('✅ Conectado a MongoDB Atlas');
   } catch (error) {

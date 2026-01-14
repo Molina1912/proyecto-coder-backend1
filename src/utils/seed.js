@@ -1,4 +1,3 @@
-// src/utils/seed.js
 import { fileURLToPath } from 'url';
 import { connectDB } from '../config/database.js';
 import { ProductModel } from '../models/product.model.js';

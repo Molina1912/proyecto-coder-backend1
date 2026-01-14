@@ -1,4 +1,3 @@
-// src/routes/carts.router.js
 import { Router } from 'express';
 import {
   getCartById,

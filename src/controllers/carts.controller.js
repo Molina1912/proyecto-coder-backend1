@@ -1,8 +1,8 @@
-// src/controllers/carts.controller.js
+
 import { CartModel } from '../models/cart.model.js';
 import { ProductModel } from '../models/product.model.js';
 
-// GET /:cid → con populate (concepto clave de Unidad 9)
+// GET
 export const getCartById = async (req, res) => {
   try {
     const cart = await CartModel.findById(req.params.cid).populate('products.product');
@@ -16,7 +16,7 @@ export const getCartById = async (req, res) => {
   }
 };
 
-// DELETE /:cid/products/:pid
+// DELETE 
 export const removeProductFromCart = async (req, res) => {
   try {
     const { cid, pid } = req.params;
@@ -35,17 +35,17 @@ export const removeProductFromCart = async (req, res) => {
   }
 };
 
-// PUT /:cid → reemplazar todo el carrito
+// PUT 
 export const updateCart = async (req, res) => {
   try {
     const { cid } = req.params;
-    const { products } = req.body; // [{ product: "id1", quantity: 2 }, ...]
+    const { products } = req.body; 
 
     if (!Array.isArray(products)) {
       return res.status(400).json({ error: 'El campo "products" debe ser un arreglo' });
     }
 
-    // Validar que todos los productos existan
+    
     for (const item of products) {
       const exists = await ProductModel.exists({ _id: item.product });
       if (!exists) {
@@ -70,7 +70,7 @@ export const updateCart = async (req, res) => {
   }
 };
 
-// PUT /:cid/products/:pid → actualizar cantidad
+// PUT 
 export const updateProductQuantity = async (req, res) => {
   try {
     const { cid, pid } = req.params;
@@ -97,7 +97,7 @@ export const updateProductQuantity = async (req, res) => {
   }
 };
 
-// DELETE /:cid → vaciar carrito
+// DELETE 
 export const clearCart = async (req, res) => {
   try {
     const result = await CartModel.findByIdAndUpdate(
