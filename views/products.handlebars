@@ -17,7 +17,24 @@
       <p>Precio: ${{price}}</p>
       <p>Categoría: {{category}}</p>
       <p>Stock: {{stock}}</p>
+      
       <a href="/products/{{_id}}">Ver detalles</a>
+      
+      
+      <form action="/carts/add" method="POST" style="display: inline; margin-left: 10px;">
+        <input type="hidden" name="productId" value="{{_id}}" />
+        <button type="submit" style="
+          padding: 5px 10px;
+          background-color: #4CAF50;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 14px;
+        ">
+          Agregar al Carrito
+        </button>
+      </form>
     </div>
   {{/each}}
 </div>

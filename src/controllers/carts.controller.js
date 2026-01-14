@@ -114,3 +114,13 @@ export const clearCart = async (req, res) => {
     res.status(500).json({ error: 'Error al vaciar el carrito' });
   }
 };
+
+export const createCart = async (req, res) => {
+  try {
+    const newCart = new CartModel({ products: [] });
+    await newCart.save();
+    res.status(201).json({ status: 'success', payload: newCart });
+  } catch (error) {
+    res.status(500).json({ status: 'error', error: 'Error al crear carrito' });
+  }
+};

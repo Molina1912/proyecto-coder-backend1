@@ -4,4 +4,10 @@
 <p><strong>Categoría:</strong> {{product.category}}</p>
 <p><strong>Stock:</strong> {{product.stock}}</p>
 <p><strong>Disponible:</strong> {{#if product.status}}Sí{{else}}No{{/if}}</p>
+
+<form action="/carts/add" method="POST" style="margin: 20px 0;">
+  <input type="hidden" name="productId" value="{{product._id}}" />
+  <button type="submit">Agregar al carrito</button>
+</form>
+
 <a href="/products">← Volver a productos</a>

@@ -1,16 +1,14 @@
 import { Router } from 'express';
 import { ProductModel } from '../models/product.model.js';
-
 import { CartModel } from '../models/cart.model.js';
 
 const router = Router();
-
-
 
 router.get('/products', async (req, res) => {
   try {
     const { limit = 10, page = 1, sort, query } = req.query;
     const filter = {};
+
     if (query) {
       if (query === 'true' || query === 'false') {
         filter.status = query === 'true';
@@ -18,8 +16,9 @@ router.get('/products', async (req, res) => {
         filter.category = { $regex: query, $options: 'i' };
       }
     }
+
     const sortOption = sort === 'asc' ? { price: 1 } : sort === 'desc' ? { price: -1 } : {};
-    
+
     const result = await ProductModel.paginate(filter, {
       limit: parseInt(limit),
       page: parseInt(page),
@@ -27,7 +26,6 @@ router.get('/products', async (req, res) => {
       lean: true
     });
 
- 
     const buildUrl = (p) => {
       const url = new URL('http://localhost:8080/products');
       url.searchParams.set('limit', limit);
@@ -52,30 +50,115 @@ router.get('/products', async (req, res) => {
       sort
     });
   } catch (error) {
-    console.error(error);
+    console.error('Error al cargar productos:', error);
     res.status(500).render('error', { title: 'Error', error: 'Error al cargar productos' });
   }
 });
 
-
 router.get('/products/:pid', async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.pid).lean();
-    if (!product) return res.status(404).render('error', { title: 'No encontrado', error: 'Producto no encontrado' });
+    if (!product) {
+      return res.status(404).render('error', { title: 'No encontrado', error: 'Producto no encontrado' });
+    }
     res.render('productDetail', { title: product.title, product });
   } catch (error) {
+    console.error('Error al cargar el producto:', error);
     res.status(500).render('error', { title: 'Error', error: 'Error al cargar el producto' });
   }
 });
 
-
 router.get('/carts/:cid', async (req, res) => {
   try {
-    const cart = await CartModel.findById(req.params.cid).populate('products.product').lean();
-    if (!cart) return res.status(404).render('error', { title: 'No encontrado', error: 'Carrito no encontrado' });
-    res.render('cart', { title: 'Mi Carrito', cart });
+    const cart = await CartModel.findById(req.params.cid).populate('products.product');
+    if (!cart) {
+      return res.status(404).render('error', { title: 'No encontrado', error: 'Carrito no encontrado' });
+    }
+    res.render('cart', { title: 'Mi Carrito', cart: cart.toObject({ getters: true }) });
   } catch (error) {
+    console.error('Error al cargar el carrito:', error);
     res.status(500).render('error', { title: 'Error', error: 'Error al cargar el carrito' });
+  }
+});
+
+router.post('/carts/add', async (req, res) => {
+  try {
+    const { productId } = req.body;
+
+    const productExists = await ProductModel.findById(productId);
+    if (!productExists) {
+      return res.status(404).send('Producto no encontrado');
+    }
+
+    let cart = await CartModel.findOne();
+    if (!cart) {
+      const newCart = new CartModel({ products: [] });
+      cart = await newCart.save();
+    }
+
+    const existingProduct = cart.products.find(p => p.product.toString() === productId);
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+    } else {
+      cart.products.push({ product: productId, quantity: 1 });
+    }
+
+    await cart.save();
+    res.redirect(`/carts/${cart._id}`);
+  } catch (error) {
+    console.error('Error al agregar al carrito:', error);
+    res.status(500).send('Error al agregar al carrito');
+  }
+});
+
+
+router.post('/carts/:cid/remove', async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const { productId } = req.body;
+
+    const cart = await CartModel.findById(cid);
+    if (!cart) {
+      return res.status(404).send('Carrito no encontrado');
+    }
+
+    const initialLength = cart.products.length;
+    cart.products = cart.products.filter(p => p.product.toString() !== productId);
+
+    if (cart.products.length === initialLength) {
+      return res.status(404).send('Producto no encontrado en el carrito');
+    }
+
+    await cart.save();
+    res.redirect(`/carts/${cid}`);
+  } catch (error) {
+    console.error('Error al eliminar del carrito:', error);
+    res.status(500).send('Error al eliminar del carrito');
+  }
+});
+
+router.post('/carts/:cid/remove', async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const { productId } = req.body;
+
+    const cart = await CartModel.findById(cid);
+    if (!cart) {
+      return res.status(404).send('Carrito no encontrado');
+    }
+
+    const initialLength = cart.products.length;
+    cart.products = cart.products.filter(p => p.product.toString() !== productId);
+
+    if (cart.products.length === initialLength) {
+      return res.status(404).send('Producto no encontrado en el carrito');
+    }
+
+    await cart.save();
+    res.redirect(`/carts/${cid}`);
+  } catch (error) {
+    console.error('Error al eliminar del carrito:', error);
+    res.status(500).send('Error al eliminar del carrito');
   }
 });
 
