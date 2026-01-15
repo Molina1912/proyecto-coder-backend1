@@ -17,7 +17,7 @@ Este sistema gestiona productos y carritos con funcionalidades de : paginación,
 - Vista de detalle individual
 
 ### Carritos
-- Almacenan solo el **ID del producto** (optimización)
+- Almacenan solo el **ID del producto**
 - Al leerse, se **pueblan** con datos completos del producto (`populate`)
 - Operaciones CRUD :
   - Agregar/eliminar productos
