@@ -4,6 +4,7 @@ import { ProductModel } from '../models/product.model.js';
 import { CartModel } from '../models/cart.model.js';
 
 const seedProducts = [
+  
   {
     title: "Suculenta Echeveria",
     description: "Planta suculenta decorativa ideal para interiores. Fácil de cuidar.",
@@ -80,9 +81,9 @@ const seedProducts = [
     price: 2500,
     thumbnail: "",
     code: "SEM002",
-    stock: 0,
+    stock: 15,
     category: "semillas",
-    status: false
+    status: true
   },
   {
     title: "Suculenta Sedum Morganianum",
@@ -103,6 +104,107 @@ const seedProducts = [
     stock: 6,
     category: "maceteros",
     status: true
+  },
+
+  {
+    title: "Suculenta Aloe Vera",
+    description: "Planta medicinal con propiedades curativas. Fácil de cultivar.",
+    price: 5500,
+    thumbnail: "",
+    code: "SUC004",
+    stock: 20,
+    category: "plantas",
+    status: true
+  },
+  {
+    title: "Macetero de Cemento Minimalista",
+    description: "Diseño moderno y pesado. Perfecto para espacios urbanos.",
+    price: 7200,
+    thumbnail: "",
+    code: "MAC004",
+    stock: 10,
+    category: "maceteros",
+    status: true
+  },
+  {
+    title: "Kit de Herramientas para Suculentas",
+    description: "Incluye pinzas, cepillo y cuchara pequeña para trasplantes.",
+    price: 6800,
+    thumbnail: "",
+    code: "ACC003",
+    stock: 15,
+    category: "accesorios",
+    status: true
+  },
+  {
+    title: "Semillas de Kalanchoe",
+    description: "Flores vibrantes en tonos rojos y naranjas. Paquete de 15 semillas.",
+    price: 2900,
+    thumbnail: "",
+    code: "SEM003",
+    stock: 30,
+    category: "semillas",
+    status: true
+  },
+  {
+    title: "Suculenta Lithops (Piedra Viva)",
+    description: "Planta mimética que se asemeja a piedras. Rara y coleccionable.",
+    price: 8500,
+    thumbnail: "",
+    code: "SUC005",
+    stock: 5,
+    category: "plantas",
+    status: true
+  },
+  {
+    title: "Rociador de Niebla para Plantas",
+    description: "Ideal para humectar hojas sin encharcar. Capacidad 300ml.",
+    price: 4200,
+    thumbnail: "",
+    code: "ACC004",
+    stock: 25,
+    category: "accesorios",
+    status: true
+  },
+  {
+    title: "Macetero Colgante de Macramé",
+    description: "Hecho a mano con algodón natural. Incluye soporte de madera.",
+    price: 9800,
+    thumbnail: "",
+    code: "MAC005",
+    stock: 7,
+    category: "maceteros",
+    status: true
+  },
+  {
+    title: "Semillas de Echeveria Mix",
+    description: "10 variedades de Echeveria en colores pastel. Paquete premium.",
+    price: 3500,
+    thumbnail: "",
+    code: "SEM004",
+    stock: 20,
+    category: "semillas",
+    status: true
+  },
+  {
+    title: "Fertilizante Líquido para Suculentas",
+    description: "Fórmula concentrada para crecimiento saludable. Frasco de 250ml.",
+    price: 3800,
+    thumbnail: "",
+    code: "ACC005",
+    stock: 35,
+    category: "accesorios",
+    status: true
+  },
+  {
+    title: "Suculenta Graptopetalum",
+    description: "Conocida como 'rosa de piedra'. Hojas en forma de pétalos.",
+    price: 6000,
+    thumbnail: "",
+    code: "SUC006",
+    stock: 12,
+    category: "plantas",
+    status: true
   }
 ];
 
@@ -119,11 +221,11 @@ async function seedDatabase() {
       ]
     });
     await cart.save();
-    console.log(`✅ Base de datos poblada con ${products.length} productos de suculentas`);
-    console.log(`🛒 Carrito de prueba ID: ${cart._id}`);
+    console.log(`Base de datos poblada con ${products.length} productos de suculentas`);
+    console.log(`Carrito de Compras ID: ${cart._id}`);
     process.exit(0);
   } catch (error) {
-    console.error('❌ Error:', error);
+    console.error('Error:', error);
     process.exit(1);
   }
 }

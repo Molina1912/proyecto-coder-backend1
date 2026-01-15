@@ -1,11 +1,11 @@
-// src/routes/carts.router.js
+
 import { Router } from 'express';
 import { CartModel } from '../models/cart.model.js';
 import { ProductModel } from '../models/product.model.js';
 
 const router = Router();
 
-// POST /api/carts → crear un nuevo carrito vacío
+
 router.post('/', async (req, res) => {
   try {
     const newCart = new CartModel({ products: [] });
@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /api/carts/:cid → obtener carrito con populate
+
 router.get('/:cid', async (req, res) => {
   try {
     const cart = await CartModel.findById(req.params.cid).populate('products.product');
@@ -31,7 +31,7 @@ router.get('/:cid', async (req, res) => {
   }
 });
 
-// POST /api/carts/:cid/products/:pid → agregar producto al carrito
+
 router.post('/:cid/products/:pid', async (req, res) => {
   try {
     const { cid, pid } = req.params;
@@ -61,7 +61,7 @@ router.post('/:cid/products/:pid', async (req, res) => {
   }
 });
 
-// PUT /api/carts/:cid → reemplazar todo el contenido del carrito
+
 router.put('/:cid', async (req, res) => {
   try {
     const { cid } = req.params;
@@ -71,7 +71,7 @@ router.put('/:cid', async (req, res) => {
       return res.status(400).json({ status: 'error', error: 'El campo "products" debe ser un arreglo' });
     }
 
-    // Validar que cada producto tenga "product" y "quantity"
+    
     for (const item of products) {
       if (!item.product || typeof item.quantity !== 'number' || item.quantity <= 0) {
         return res.status(400).json({ status: 'error', error: 'Cada producto debe tener "product" (ID) y "quantity" (> 0)' });
@@ -95,7 +95,7 @@ router.put('/:cid', async (req, res) => {
   }
 });
 
-// PUT /api/carts/:cid/products/:pid → actualizar solo la cantidad de un producto
+
 router.put('/:cid/products/:pid', async (req, res) => {
   try {
     const { cid, pid } = req.params;
@@ -125,7 +125,7 @@ router.put('/:cid/products/:pid', async (req, res) => {
   }
 });
 
-// DELETE /api/carts/:cid/products/:pid → eliminar un producto del carrito
+
 router.delete('/:cid/products/:pid', async (req, res) => {
   try {
     const { cid, pid } = req.params;
@@ -150,7 +150,7 @@ router.delete('/:cid/products/:pid', async (req, res) => {
   }
 });
 
-// DELETE /api/carts/:cid → vaciar el carrito (sin eliminarlo)
+
 router.delete('/:cid', async (req, res) => {
   try {
     const { cid } = req.params;

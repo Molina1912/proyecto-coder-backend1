@@ -4,6 +4,7 @@ import { CartModel } from '../models/cart.model.js';
 
 const router = Router();
 
+
 router.get('/products', async (req, res) => {
   try {
     const { limit = 10, page = 1, sort, query } = req.query;
@@ -55,6 +56,7 @@ router.get('/products', async (req, res) => {
   }
 });
 
+
 router.get('/products/:pid', async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.pid).lean();
@@ -68,18 +70,32 @@ router.get('/products/:pid', async (req, res) => {
   }
 });
 
+
 router.get('/carts/:cid', async (req, res) => {
   try {
     const cart = await CartModel.findById(req.params.cid).populate('products.product');
     if (!cart) {
       return res.status(404).render('error', { title: 'No encontrado', error: 'Carrito no encontrado' });
     }
-    res.render('cart', { title: 'Mi Carrito', cart: cart.toObject({ getters: true }) });
+
+    
+    let total = 0;
+    for (const item of cart.products) {
+      if (item.product && item.product.price) {
+        total += item.product.price * item.quantity;
+      }
+    }
+
+    const cartData = cart.toObject({ getters: true });
+    cartData.total = total;
+
+    res.render('cart', { title: 'Mi Carrito', cart: cartData });
   } catch (error) {
     console.error('Error al cargar el carrito:', error);
     res.status(500).render('error', { title: 'Error', error: 'Error al cargar el carrito' });
   }
 });
+
 
 router.post('/carts/add', async (req, res) => {
   try {
@@ -103,6 +119,7 @@ router.post('/carts/add', async (req, res) => {
       cart.products.push({ product: productId, quantity: 1 });
     }
 
+    cart.markModified('products');
     await cart.save();
     res.redirect(`/carts/${cart._id}`);
   } catch (error) {
@@ -137,28 +154,23 @@ router.post('/carts/:cid/remove', async (req, res) => {
   }
 });
 
-router.post('/carts/:cid/remove', async (req, res) => {
+
+router.get('/carts', async (req, res) => {
   try {
-    const { cid } = req.params;
-    const { productId } = req.body;
-
-    const cart = await CartModel.findById(cid);
-    if (!cart) {
-      return res.status(404).send('Carrito no encontrado');
+    const cart = await CartModel.findOne().sort({ createdAt: -1 });
+    if (cart) {
+      return res.redirect(`/carts/${cart._id}`);
+    } else {
+      const newCart = new CartModel({ products: [] });
+      const savedCart = await newCart.save();
+      return res.redirect(`/carts/${savedCart._id}`);
     }
-
-    const initialLength = cart.products.length;
-    cart.products = cart.products.filter(p => p.product.toString() !== productId);
-
-    if (cart.products.length === initialLength) {
-      return res.status(404).send('Producto no encontrado en el carrito');
-    }
-
-    await cart.save();
-    res.redirect(`/carts/${cid}`);
   } catch (error) {
-    console.error('Error al eliminar del carrito:', error);
-    res.status(500).send('Error al eliminar del carrito');
+    console.error('Error al acceder al carrito:', error);
+    res.status(500).render('error', { 
+      title: 'Error', 
+      error: 'No se pudo cargar el carrito' 
+    });
   }
 });
 

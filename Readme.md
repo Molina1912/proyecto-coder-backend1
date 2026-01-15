@@ -1,6 +1,6 @@
 # Backend - Tienda de Suculentas
 
-Backend desarrollado en **Node.js + Express** con **MongoDB Atlas** y **Handlebars**, como entrega final del curso de Backend I en CoderHouse.
+Backend desarrollado en **Node.js + Express** con **MongoDB Atlas** y **Handlebars**
 
 Este sistema gestiona productos y carritos con funcionalidades de : paginación, filtros, ordenamiento y relaciones entre documentos mediante `populate`.
 
